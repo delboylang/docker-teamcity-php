@@ -1,0 +1,36 @@
+server:
+  mem_limit: 4g
+  image: alexanderilyin/docker-teamcity-server
+  ports:
+   - "8111:8111"
+  volumes:
+    - .TeamCity:/root/.BuildServer
+  links:
+   - mysql
+mysql:
+  image: alexanderilyin/docker-mysql
+  volumes:
+    - .MySQL:/var/lib/mysql
+  environment:
+    MYSQL_DATABASE: teamcity
+    MYSQL_USER: teamcity
+    MYSQL_PASSWORD: teamcity
+    MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    
+agent1:
+  build: .
+  dockerfile: AgentDockerFile
+  links:
+    - server
+
+agent2:
+  build: .
+  dockerfile: AgentDockerFile
+  links:
+    - server
+
+agent3:
+  build: .
+  dockerfile: AgentDockerFile
+  links:
+    - server
